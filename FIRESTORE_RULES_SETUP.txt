@@ -1,0 +1,87 @@
+════════════════════════════════════════════════════════════════════════
+FIRESTORE SECURITY RULES - UNTUK DEVELOPMENT (TESTING)
+════════════════════════════════════════════════════════════════════════
+
+🔴 PENTING: App auto-close biasanya karena Firestore Security Rules!
+
+Firestore default: DENY ALL ACCESS
+Jika tidak di-configure, semua request (read/write) akan di-reject!
+
+════════════════════════════════════════════════════════════════════════
+
+HOW TO FIX:
+
+1. Go to: https://console.firebase.google.com/
+
+2. Select Project: "wilyam-yazid-hamdi"
+
+3. Left Menu → Firestore Database
+
+4. Click "Rules" tab
+
+5. Delete SEMUA kode yang ada (select all + delete)
+
+6. Paste kode di bawah:
+
+════════════════════════════════════════════════════════════════════════
+
+COPY-PASTE RULES BELOW:
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // For development/testing: allow all authenticated users
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+
+════════════════════════════════════════════════════════════════════════
+
+7. Click "Publish" button
+
+8. Wait for "Rules updated successfully" message
+
+9. Run app: flutter run
+
+════════════════════════════════════════════════════════════════════════
+
+⚠️ UNTUK PRODUCTION (LEBIH AMAN):
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users dapat hanya read/write data mereka sendiri
+    match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+    
+    // Public products (read-only)
+    match /products/{product} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Orders: read/write own orders only
+    match /orders/{orderId} {
+      allow read, write: if request.auth.uid == resource.data.userId;
+    }
+  }
+}
+
+════════════════════════════════════════════════════════════════════════
+
+TROUBLESHOOTING:
+
+If "Publish" fails:
+  ✅ Check syntax (rules_version format)
+  ✅ Make sure no extra characters
+  ✅ Try dengan simpler rules dulu
+
+If app masih crash:
+  ✅ Check Firebase console: Firestore page exists?
+  ✅ Run: flutter run -v (lihat exact error)
+  ✅ Check internet permission in AndroidManifest.xml
+
+════════════════════════════════════════════════════════════════════════

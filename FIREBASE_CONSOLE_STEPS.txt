@@ -1,0 +1,235 @@
+════════════════════════════════════════════════════════════════════════════
+        FIRESTORE SECURITY RULES - STEP BY STEP DENGAN SCREENSHOTS
+════════════════════════════════════════════════════════════════════════════
+
+Jika app masih auto-close, ini adalah STEP yang paling penting!
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 1: BUKA FIREBASE CONSOLE
+─────────────────────────────
+
+1. Open browser
+2. Go to: https://console.firebase.google.com/
+3. Login dengan akun Gmail Anda
+
+Result: Akan masuk ke Firebase Console
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 2: SELECT PROJECT
+──────────────────────
+
+1. Di dashboard, cari project: wilyam-yazid-hamdi
+2. Click project tersebut
+3. Akan masuk ke project detail
+
+Result: Di Firebase project console untuk wilyam-yazid-hamdi
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 3: BUKA FIRESTORE DATABASE
+────────────────────────────────
+
+1. Di left sidebar, cari "Firestore Database"
+   (Di bawah "Build" section)
+2. Click "Firestore Database"
+
+Jika muncul "Create Database" button:
+  → Click "Create Database"
+  → Choose location: us-central1 (or any default)
+  → Click "Create"
+  → Wait 1-2 minutes untuk database initialized
+
+Result: Firestore Database tab terbuka
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 4: GO TO RULES TAB
+──────────────────────
+
+Sebelumnya akan ada tab:
+  - Data (default, selected)
+  - Rules
+  - Indexes
+  - Usage
+
+1. Click "Rules" tab
+
+Result: Rules editor terbuka (dengan default rules atau kosong)
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 5: DELETE EXISTING RULES (JIKA ADA)
+────────────────────────────────────────
+
+Jika ada text di editor:
+  1. Select All: Ctrl+A
+  2. Delete: Press Delete
+
+Result: Rules editor kosong
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 6: COPY-PASTE NEW RULES
+────────────────────────────
+
+Copy ini EXACTLY (tanpa perubahan):
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+
+Paste ke editor.
+
+Result: Rules editor berisi code di atas
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 7: PUBLISH
+───────────────
+
+1. Di top-right, cari button "Publish"
+2. Click "Publish"
+3. Akan muncul dialog confirmation: "Are you sure? This will update the rules..."
+4. Click "Publish" di dialog
+
+Result: Akan muncul notification:
+  "Rules updated successfully"
+
+Wait 10-30 seconds untuk rules fully propagate.
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 8: VERIFY RULES PUBLISHED
+──────────────────────────────
+
+Go back to "Rules" tab.
+Verify rules masih ada (tidak kosong).
+Syntax highlight should be normal (tidak red).
+
+Result: Rules sudah published & active
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 9: TEST APP
+────────────────
+
+Open terminal:
+
+  cd d:\w3-Grocery-App-flutter-mockup-main
+  flutter clean
+  flutter pub get
+  flutter run
+
+Expected:
+  1. Loading spinner: "Initializing..."
+  2. After 5-10 sec: LoginScreen appears
+  3. NO AUTO-CLOSE! ✅
+
+════════════════════════════════════════════════════════════════════════════
+
+✅ YANG HARUS DILIHAT DI FIREBASE CONSOLE
+──────────────────────────────────────────
+
+Sebelum step 7 (publish):
+  ❌ Rules editor mungkin menunjukkan:
+     - "Your security rules are not secure"
+     - "This will allow anyone to access/modify data"
+  
+  ✅ Ini NORMAL untuk development rules
+  ✅ Click "Publish" anyway untuk testing
+
+Sesudah step 7 (publish):
+  ✅ Notification: "Rules updated successfully"
+  ✅ Rules tab shows your rules (tidak kosong)
+  ✅ Timestamp di bawah shows recent update
+
+════════════════════════════════════════════════════════════════════════════
+
+❌ JIKA MASIH ERROR
+───────────────────
+
+1. Verify Firestore Database exists:
+   - Should see "Firestore Database" tab (not "Create Database")
+   - Should see document collections (even if empty)
+
+2. Verify Rules published:
+   - Rules tab should show your rules
+   - Should see recent timestamp
+
+3. Restart Flutter:
+   - Press Ctrl+C di terminal
+   - Run: flutter run (again)
+
+4. Check logs:
+   - flutter run -v 2>&1 | Tee-Object log.txt
+   - Search "PERMISSION_DENIED" or "Firebase error"
+   - Post screenshot/log untuk debugging
+
+════════════════════════════════════════════════════════════════════════════
+
+⚠️ PENTING NOTES
+─────────────────
+
+1. Rules ini adalah PERMISSIVE (allow semua authenticated users)
+   ✅ Bagus untuk development/testing
+   ❌ TIDAK aman untuk production!
+   
+   Untuk production, ubah ke:
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /users/{userId} {
+         allow read, write: if request.auth.uid == userId;
+       }
+     }
+   }
+   ```
+
+2. Firestore Rules changes take 5-30 seconds to propagate
+   Tunggu sebentar sebelum test app
+
+3. Firebase Console hanya melalui browser
+   Tidak bisa set rules dari code/command line
+
+════════════════════════════════════════════════════════════════════════════
+
+📞 JIKA STUCK
+──────────────
+
+Problema:
+  1. Can't find Firestore Database menu
+     → Check: Left sidebar, "Build" section
+     → If not exist, click "Create Database" di dashboard
+
+  2. "Create Database" button masih muncul
+     → Click it
+     → Choose us-central1
+     → Wait 2 minutes untuk initialize
+
+  3. Can't find Rules tab
+     → Click "Firestore Database" dari menu
+     → Then click "Rules" tab (next to "Data")
+
+  4. Rules publish gagal
+     → Check syntax (copy-paste exact code above)
+     → Reload page: F5
+     → Try publish again
+
+  5. App masih auto-close setelah rules publish
+     → Run: flutter run -v
+     → Look untuk "PERMISSION_DENIED" di logs
+     → Post logs untuk debugging
+
+════════════════════════════════════════════════════════════════════════════
+
+Itu saja! Setelah publish rules, app should work perfectly.
+
+════════════════════════════════════════════════════════════════════════════

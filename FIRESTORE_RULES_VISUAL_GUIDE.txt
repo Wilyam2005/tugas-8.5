@@ -1,0 +1,248 @@
+════════════════════════════════════════════════════════════════════════════
+FIRESTORE RULES - VISUAL STEP-BY-STEP GUIDE
+════════════════════════════════════════════════════════════════════════════
+
+🎯 GOAL: Configure Firestore Security Rules untuk fix app crash
+
+⏱️ TIME: 5 minutes
+📊 DIFFICULTY: Very Easy
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 1: BUKA FIREBASE CONSOLE
+──────────────────────────────
+
+1. Open browser
+2. Go to: https://console.firebase.google.com/
+
+Expected: Firebase Console dashboard
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 2: SELECT PROJECT
+──────────────────────
+
+1. Look untuk project list
+2. Find: "wilyam-yazid-hamdi"
+3. Click it
+
+If tidak ada di list:
+  → Cari di "Recent projects"
+  → Atau scroll down untuk find
+
+Expected: Project dashboard opens
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 3: OPEN FIRESTORE DATABASE
+────────────────────────────────
+
+1. Left menu → Search untuk "Firestore"
+2. Click: "Firestore Database"
+
+OR
+
+1. Left menu → "Build" section
+2. Click: "Firestore Database"
+
+Expected: Firestore Database page opens
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 4: GO TO RULES TAB
+───────────────────────
+
+1. At top of page, look untuk tabs:
+   | Data | Rules | Backups | Indexes |
+
+2. Click: "Rules" tab
+
+If "Create Database" button visible:
+  ⚠️ Database not created yet
+  → Click "Create Database"
+  → Choose location: us-central1
+  → Click "Create"
+  → Wait for creation
+  → Then come back to this step
+
+Expected: Rules editor page opens
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 5: CLEAR EXISTING RULES
+─────────────────────────────
+
+1. In Rules editor, select ALL text:
+   Ctrl + A (Windows)
+   Cmd + A (Mac)
+
+2. Delete:
+   Press Delete key
+
+Expected: Editor becomes empty
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 6: PASTE NEW RULES
+───────────────────────
+
+1. Copy this text:
+
+────────────────────────────────────────────────────────────────────────
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+
+────────────────────────────────────────────────────────────────────────
+
+2. In Rules editor, paste:
+   Ctrl + V (Windows)
+   Cmd + V (Mac)
+
+Expected: Rules appear in editor
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 7: PUBLISH RULES
+─────────────────────
+
+1. At top right, look untuk button:
+   [ Publish ]  OR  [ Update ]
+
+2. Click it
+
+Expected: Dialog atau message appears
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 8: WAIT FOR CONFIRMATION
+──────────────────────────────
+
+After clicking Publish:
+
+1. Wait untuk message:
+   "Rules updated successfully"
+
+2. OR see green checkmark
+
+3. OR see notification at top
+
+Expected: Success confirmation appears
+
+════════════════════════════════════════════════════════════════════════════
+
+STEP 9: VERIFY RULES SAVED
+──────────────────────────
+
+1. Refresh page:
+   F5 (Windows)
+   Cmd + R (Mac)
+
+2. Go back to Rules tab
+
+Expected: Your rules still visible in editor
+
+════════════════════════════════════════════════════════════════════════════
+
+✅ FIRESTORE SETUP COMPLETE!
+─────────────────────────────
+
+Now run app:
+  flutter clean
+  flutter pub get
+  flutter run
+
+Expected:
+  ✅ App installs
+  ✅ App launches
+  ✅ NO CRASH!
+
+════════════════════════════════════════════════════════════════════════════
+
+❓ TROUBLESHOOTING
+──────────────────
+
+PROBLEM: Cannot find Firestore Database
+──────────────────────────────────────
+Solution:
+  1. Left menu → scroll down
+  2. Look untuk "Build" section
+  3. Click "Firestore Database"
+
+PROBLEM: "Create Database" button visible (no Rules tab)
+────────────────────────────────────────────────────────
+Solution:
+  1. Click "Create Database"
+  2. Choose location: us-central1
+  3. Click "Create"
+  4. Wait for creation (1-2 minutes)
+  5. Then go to Rules tab
+
+PROBLEM: Publish button grayed out
+──────────────────────────────────
+Solution:
+  1. Check rules syntax (copy-paste from above exactly)
+  2. No extra spaces atau characters
+  3. Try again
+
+PROBLEM: "Rules updated failed" error
+──────────────────────────────────────
+Solution:
+  1. Go back to STEP 5 (Clear existing rules)
+  2. Paste fresh rules
+  3. Try publish again
+
+════════════════════════════════════════════════════════════════════════════
+
+✨ RULES EXPLANATION (Optional reading)
+──────────────────────────────────────
+
+rules_version = '2';
+→ Using Firestore rules version 2
+
+service cloud.firestore {
+→ Configuring Firestore service
+
+match /databases/{database}/documents {
+→ Applies to all documents
+
+match /{document=**} {
+→ Matches all documents at any path
+
+allow read, write: if request.auth != null;
+→ Allow read & write IF user is authenticated (logged in)
+
+════════════════════════════════════════════════════════════════════════════
+
+🎯 AFTER RULES ARE PUBLISHED
+─────────────────────────────
+
+1. Go back to terminal
+2. Run:
+   flutter clean
+   flutter pub get
+   flutter run
+
+3. Watch app launch
+4. Should NOT crash
+
+════════════════════════════════════════════════════════════════════════════
+
+SUMMARY
+───────
+
+This guide helps you:
+  ✅ Find Firestore Database
+  ✅ Navigate to Rules
+  ✅ Paste security rules
+  ✅ Publish successfully
+
+Result: App will stop crashing! 🎉
+
+════════════════════════════════════════════════════════════════════════════

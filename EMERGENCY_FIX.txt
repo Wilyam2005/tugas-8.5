@@ -1,0 +1,248 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║                    🚨 EMERGENCY FIX GUIDE 🚨                               ║
+║                   (App Crashes - Instant Solution)                         ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+🔴 APP CRASH ERROR
+══════════════════════════════════════════════════════════════════════════
+
+From screenshot:
+"flutter_application_12 mengalami masalah"
+"ditutup paksa karena kesalahan internal"
+
+Translation: "App encountered an issue and closed due to internal error"
+
+═══════════════════════════════════════════════════════════════════════════
+
+⚡ INSTANT FIX (DO THIS NOW!)
+═════════════════════════════
+
+STEP 1: Configure Firestore Rules (3 MINUTES)
+──────────────────────────────────────────────
+
+A. Go to: https://console.firebase.google.com/
+B. Select: wilyam-yazid-hamdi project
+C. Left menu: Firestore Database
+D. Click: Rules tab
+E. Delete all text (Ctrl+A then Delete)
+F. Paste THIS:
+
+────────────────────────────────────────────────────────────────────────
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+
+────────────────────────────────────────────────────────────────────────
+
+G. Click "Publish" button
+H. Wait for "Rules updated successfully" message ✅
+
+CRITICAL: Do NOT skip this step!
+
+═══════════════════════════════════════════════════════════════════════════
+
+STEP 2: Uninstall Old App (1 MINUTE)
+─────────────────────────────────────
+
+On your Android device:
+
+A. Open Settings
+B. Apps (or Application Manager)
+C. Find: flutter_application_12
+D. Tap: Uninstall
+E. Confirm: Yes
+
+OR long-press app icon → Uninstall
+
+═══════════════════════════════════════════════════════════════════════════
+
+STEP 3: Fresh Build (3 MINUTES)
+────────────────────────────────
+
+On your PC:
+
+Open terminal/command prompt:
+
+  cd d:\w3-Grocery-App-flutter-mockup-main
+  flutter clean
+  flutter pub get
+  flutter run
+
+Wait for app to compile and install...
+
+═══════════════════════════════════════════════════════════════════════════
+
+✅ EXPECTED RESULT
+──────────────────
+
+1. App installs successfully ✅
+2. Loading spinner appears ✅
+3. "Initializing..." message shown ✅
+4. After 5-10 seconds:
+   - LoginScreen appears (NOT logged in) ✅
+   OR
+   - HomePage appears (logged in) ✅
+5. NO CRASH! ✅
+
+═══════════════════════════════════════════════════════════════════════════
+
+❓ IF STILL CRASHING
+────────────────────
+
+OPTION 1: Test Firebase Config
+────────────────────────────────
+Run:
+  flutter run -t lib/test_firebase.dart
+
+This shows:
+  ✅ If Firebase initialized correctly
+  ✅ Error details if config wrong
+
+OPTION 2: Run with Debug Logs
+──────────────────────────────
+Run:
+  flutter run -v 2>&1 | Tee-Object log.txt
+
+Then search log for:
+  - "ERROR"
+  - "PERMISSION_DENIED"
+  - "Exception"
+
+Post the error for help.
+
+OPTION 3: Verify Everything
+────────────────────────────
+Check:
+  ✅ Firestore Rules published (Rules tab shows your rules)
+  ✅ Firestore Database created (Rules tab exists)
+  ✅ Package name correct:
+     - build.gradle.kts: com.example.w3_grocery_app
+     - google-services.json: com.example.w3_grocery_app
+  ✅ Device connected & developer mode enabled
+  ✅ flutter clean executed
+  ✅ Old app uninstalled
+
+═══════════════════════════════════════════════════════════════════════════
+
+🎯 ROOT CAUSE EXPLAINED
+────────────────────────
+
+Why app crashes:
+
+1. ❌ Firestore rules not configured
+2. ❌ App tries to read user data from Firestore
+3. ❌ Firestore says: "NO PERMISSION"
+4. ❌ Exception thrown (not handled)
+5. ❌ App crashes with "internal error"
+
+With Firestore rules configured:
+
+1. ✅ Firestore rules allow authenticated users
+2. ✅ App reads user data successfully
+3. ✅ No error, app continues
+4. ✅ NO CRASH! 🎉
+
+═══════════════════════════════════════════════════════════════════════════
+
+📋 QUICK CHECKLIST
+──────────────────
+
+Before running app:
+
+□ Firestore Rules configured & published
+□ Firestore Database created (Rules tab visible)
+□ Old app uninstalled from device
+□ flutter clean executed
+□ flutter pub get executed
+□ Device connected
+□ Developer mode enabled on device
+
+═══════════════════════════════════════════════════════════════════════════
+
+⏱️ TOTAL TIME: ~7 MINUTES
+
+1. Configure Firestore rules: 3 min
+2. Uninstall old app: 1 min
+3. Build & run: 3 min
+4. Done! ✅
+
+═══════════════════════════════════════════════════════════════════════════
+
+💡 KEY POINTS
+─────────────
+
+1️⃣ FIRESTORE RULES ARE CRITICAL!
+   Tanpa rules, app akan SELALU crash dengan PERMISSION_DENIED
+
+2️⃣ FRESH INSTALL NEEDED
+   Old app cache dapat cause issues
+   Uninstall completely sebelum run baru
+
+3️⃣ CLEAN BUILD REQUIRED
+   flutter clean membersihkan old build artifacts
+   flutter pub get refresh dependencies
+
+═══════════════════════════════════════════════════════════════════════════
+
+🚀 ACTION PLAN
+──────────────
+
+DO THIS NOW:
+
+1. ⏱️ 3 min: Configure Firestore Rules
+   → Open Firebase Console
+   → Copy-paste rules above
+   → Click Publish
+
+2. ⏱️ 1 min: Uninstall old app
+   → Device Settings → Apps → Uninstall
+
+3. ⏱️ 3 min: Fresh build
+   → Terminal: flutter clean && flutter pub get && flutter run
+
+4. ✅ Result: App runs without crash!
+
+═══════════════════════════════════════════════════════════════════════════
+
+📞 STILL HAVING ISSUES?
+───────────────────────
+
+1. Run: flutter run -t lib/test_firebase.dart
+   → Shows if Firebase config is correct
+
+2. Run: flutter run -v 2>&1 | Tee-Object log.txt
+   → Save logs untuk analysis
+
+3. Check Firestore Rules published:
+   → Firebase Console → Firestore → Rules tab
+   → Should show your rules (not empty)
+
+4. Post error details untuk help
+
+═══════════════════════════════════════════════════════════════════════════
+
+🎉 SUMMARY
+───────────
+
+Problem:    App crashes dengan "internal error"
+Solution:   Configure Firestore rules + fresh build
+Time:       ~7 minutes
+Result:     App runs smoothly without crashes ✅
+
+═══════════════════════════════════════════════════════════════════════════
+
+START NOW WITH STEP 1!
+
+Configure Firestore Rules → Uninstall App → Build & Run
+
+That's it! 🚀
+
+═══════════════════════════════════════════════════════════════════════════
