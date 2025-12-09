@@ -5,64 +5,43 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-/// Default [FirebaseOptions] for use with your Firebase apps.
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
-    try {
-      if (kIsWeb) {
-        print('🌐 Using Web Firebase Config');
-        return web;
-      }
-      
-      print('📱 Current Platform: $defaultTargetPlatform');
-      
-      switch (defaultTargetPlatform) {
-        case TargetPlatform.android:
-          print('🤖 Using Android Firebase Config');
-          return android;
-        case TargetPlatform.iOS:
-          print('🍎 Using iOS Firebase Config');
-          return ios;
-        case TargetPlatform.macOS:
-          print('🖥️ Using macOS Firebase Config');
-          return macos;
-        case TargetPlatform.windows:
-          print('❌ Windows not configured');
-          throw UnsupportedError(
-            'Windows Firebase not configured. Please configure Windows Firebase at firebase.google.com',
-          );
-        case TargetPlatform.linux:
-        case TargetPlatform.fuchsia:
-          print('❌ Linux/Fuchsia not configured');
-          throw UnsupportedError(
-            'DefaultFirebaseOptions not configured for Linux/Fuchsia',
-          );
-      }
-    } catch (e) {
-      print('❌ Firebase Config Error: $e');
-      rethrow;
+    if (kIsWeb) {
+      return web;
+    }
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return android;
+      case TargetPlatform.iOS:
+        return ios;
+      case TargetPlatform.macOS:
+        return macos;
+      case TargetPlatform.windows:
+        throw UnsupportedError(
+          'Windows config is not set up.',
+        );
+      case TargetPlatform.linux:
+      case TargetPlatform.fuchsia:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for this platform.',
+        );
     }
   }
 
-  // DATA DARI FILE JSON ANDA:
-  // Project ID: wilyam-yazid-hamdi
-  // Project Number (Sender ID): 807506092000
-  // API Key: AIzaSyAo81IWPMvTihcthSXTyGqEDZvjjsolxHE
-
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAo81IWPMvTihcthSXTyGqEDZvjjsolxHE', 
-    appId: '1:807506092000:web:xxxxxxxxxxxx', // Web App belum dibuat di screenshot, biarkan placeholder
+    apiKey: 'AIzaSyAo81IWPMvTihcthSXTyGqEDZvjjsolxHE',
+    appId: '1:807506092000:web:xxxxxxxxxxxx', // Web belum di-setup di JSON, biarkan placeholder
     messagingSenderId: '807506092000',
     projectId: 'wilyam-yazid-hamdi',
     authDomain: 'wilyam-yazid-hamdi.firebaseapp.com',
     storageBucket: 'wilyam-yazid-hamdi.firebasestorage.app',
   );
 
-  // --- INI YANG PALING PENTING (ANDROID) ---
-  // Data ini 100% Valid sesuai file google-services.json Anda
+  // INI BAGIAN PALING PENTING UNTUK ANDROID
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAo81IWPMvTihcthSXTyGqEDZvjjsolxHE',
-    appId: '1:807506092000:android:278437ff3d72549f00d585',
+    apiKey: 'AIzaSyAo81IWPMvTihcthSXTyGqEDZvjjsolxHE', // Dari JSON Anda
+    appId: '1:807506092000:android:278437ff3d72549f00d585', // Dari JSON Anda (W3 Grocery)
     messagingSenderId: '807506092000',
     projectId: 'wilyam-yazid-hamdi',
     databaseURL: 'https://wilyam-yazid-hamdi.firebaseio.com',
@@ -71,7 +50,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAo81IWPMvTihcthSXTyGqEDZvjjsolxHE',
-    appId: '1:807506092000:ios:xxxxxxxxxxxx', // iOS App belum dibuat, biarkan placeholder
+    appId: '1:807506092000:ios:xxxxxxxxxxxx',
     messagingSenderId: '807506092000',
     projectId: 'wilyam-yazid-hamdi',
     databaseURL: 'https://wilyam-yazid-hamdi.firebaseio.com',
