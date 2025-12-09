@@ -489,6 +489,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   // Controller untuk mengambil teks email
   final _emailController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -546,19 +547,53 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () {
-                  // Ambil email dari controller
-                  final email = _emailController.text;
+                onPressed: () async {
+                  final email = _emailController.text.trim();
 
-                  // TODO: Tambahkan logika kirim email reset di sini
+                  if (email.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please enter your email')),
+                    );
+                    return;
+                  }
 
-                  // Navigasi ke halaman Verifikasi Kode
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => VerificationScreen(email: email),
-                    ),
-                  );
+                  setState(() => _isLoading = true);
+
+                  try {
+                    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Password reset email sent! Check your inbox.'),
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                      Navigator.pop(context); // Kembali ke login screen
+                    }
+                  } on FirebaseAuthException catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error: ${e.message}'),
+                          duration: const Duration(seconds: 3),
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error: $e'),
+                          duration: const Duration(seconds: 3),
+                        ),
+                      );
+                    }
+                  } finally {
+                    if (mounted) {
+                      setState(() => _isLoading = false);
+                    }
+                  }
                 },
                 child: const Text('SEND INSTRUCTIONS',
                     style: TextStyle(fontSize: 16)),
